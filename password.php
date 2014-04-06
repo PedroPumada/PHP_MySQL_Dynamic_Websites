@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} else {
 		$e = mysqli_real_escape_string($dbc, trim($_POST['email']));
 	}
-	// Check for hte current password:
+	// Check for the current password:
 	if (empty($_POST['pass'])) {
 		$errors[] = 'You forgot to enter your current password.';
 	} else {
