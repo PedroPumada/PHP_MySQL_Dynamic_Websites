@@ -1,20 +1,23 @@
 <?php # Script 10.2 - delete_user.php
 // This page is for deleting a user and is accessed via view_users.php
 
-$page_title = 'Delete a User';
-include ('includes/header.html');
-echo '<h1>Delete a User</h1>';
-
 // Check for a valid user ID, through GET or POST:
 if (isset($_GET['id']) && (is_numeric($_GET['id'])) ) { // From view_users.php
 	$id = $_GET['id'];
+	$fn = $_GET['fn'];
+	$ln = $_GET['ln'];
+	$page_title = $_GET['fn'] . ' ' . $_GET['ln'];
 } elseif ( (isset($_POST['id'])) && (is_numeric($_POST['id'])) ) { // Form submission
 	$id = $_POST['id'];
+	$page_title = $_POST['first_name'] . ' ' . $_POST['last_name'];
 } else { // No valid ID, kill the script
 	echo '<p class="error">This page has been accessed in error.</p>';
 	include('includes/footer.html');
 	exit();
 }
+
+include ('includes/header.html');
+echo '<h1>Delete a User</h1>';
 
 require_once('../../mysqli_connect.php');
 // Check if the form has been submitted
@@ -54,7 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		<input type="radio" name="sure" value="Yes" />Yes
 		<input type="radio" name="sure" value="No" checked="checked" />No
 		<input type="submit" name="submit" value="Submit" />
-		<input type="hidden" name="id" value="' . $id . '" /></form>';
+		<input type="hidden" name="id" value="' . $id . '" />
+		<input type="hidden" name="first_name" value="' . $fn . '" />
+		<input type="hidden" name="last_name" value="' . $ln . '" /></form>';
 
 	} else { // Not a valid user ID.
 		echo '<p class="error">This page has been accessed in error.</p>';

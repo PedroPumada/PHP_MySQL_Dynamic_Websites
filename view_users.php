@@ -40,9 +40,28 @@ if (isset($_GET['s']) && is_numeric($_GET['s'])) {
 	$start = 0;
 }
 
+// Determine a sorting variable
+$sort = (isset($_GET['sort'])) ? $_GET['sort'] : 'rd';
+
+switch ($sort) {
+	case 'ln':
+		$order_by = 'last_name ASC';
+		break;
+	case 'fn':
+		$order_by = 'first_name ASC';
+		break;
+	case 'rd':
+		$order_by = 'registration_date ASC';
+		break;
+	default:
+		$order_by = 'registration_date ASC';
+		$sort = 'rd';
+		break;
+}
+
 // Define the query:
 $q = "SELECT last_name, first_name, DATE_FORMAT(registration_date, '%M %d, %Y') 
-AS dr, user_id FROM users ORDER BY registration_date ASC LIMIT $start, $display";
+AS dr, user_id FROM users ORDER BY $order_by LIMIT $start, $display";
 $r = @mysqli_query($dbc, $q);
 
 // Table header:
@@ -50,9 +69,9 @@ echo '<table align="center" cellspacing="0" cellpadding="5" width="75%">
 <tr>
 	<td align="left"><b>Edit</b></td>
 	<td align="left"><b>Delete</b></td>
-	<td align="left"><b>Last Name</b></td>
-	<td align="left"><b>First Name</b></td>
-	<td align="left"><b>Date Registered</b></td>
+	<td align="left"><b><a href="view_users.php?sort=ln">Last Name</a></b></td>
+	<td align="left"><b><a href="view_users.php?sort=fn">First Name</b></a></td>
+	<td align="left"><b><a href="view_users.php?sort=rd">Date Registered</b></a></td>
 </tr>';
 
 // Fetch and print all records...
@@ -63,8 +82,8 @@ while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
 
 	$bg = ($bg == '#eeeeee' ? '#ffffff' : '#eeeeee'); // Switch the background color
 	echo '<tr bgcolor="' . $bg . '">
-		<td align="left"><a href="edit_user.php?id=' . $row['user_id'] . '">Edit</a></td>
-		<td align="left"><a href="delete_user.php?id=' . $row['user_id'] . '">Delete</a></td>
+		<td align="left"><a href="edit_user.php?id=' . $row['user_id'] . '&fn=' . $row['first_name'] . '&ln=' . $row['last_name'] . '">Edit</a></td>
+		<td align="left"><a href="delete_user.php?id=' . $row['user_id'] . '&fn=' . $row['first_name'] . '&ln=' . $row['last_name'] . '">Delete</a></td>
 		<td align="left">' . $row['last_name'] . '</td>
 		<td align="left">' . $row['first_name'] . '</td>
 		<td align="left">' . $row['dr'] . '</td>
@@ -89,13 +108,13 @@ if ($pages > 1) {
 
 	// If it's not the first page, make a previous link:
 	if ($current_page != 1) {
-		echo '<a href="view_users.php?s=' . ($start-$display) . '&p=' . $pages . '">Previous</a> ';
+		echo '<a href="view_users.php?s=' . ($start-$display) . '&p=' . $pages . '&sort=' . $sort . '">Previous</a> ';
 	}
 
 	// Make all the numbered pages:
 	for ($i = 1; $i <= $pages; $i++) {
 		if ($i != $current_page) {
-			echo '<a href="view_users.php?s=' . (($display * ($i-1))) . '&p=' . $pages . '">' . $i . '</a>';
+			echo '<a href="view_users.php?s=' . (($display * ($i-1))) . '&p=' . $pages . '&sort=' . $sort . '">' . $i . '</a>';
 		} else {
 			echo $i . ' ';
 		}
@@ -103,7 +122,7 @@ if ($pages > 1) {
 
 	// If it's not the last page, make a NEXT button:
 	if ($current_page != $pages) {
-		echo '<a href="view_users.php?s=' . ($start + $display) . '&p=' . $pages . '">Next</a>';
+		echo '<a href="view_users.php?s=' . ($start + $display) . '&p=' . $pages . '$sort=' . $sort . '">Next</a>';
 	}
 
 	echo '</p>'; // Close the paragraph.
