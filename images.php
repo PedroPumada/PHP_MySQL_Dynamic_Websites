@@ -10,6 +10,10 @@
 <ul>
 <?php # Script 11.4 - images.php
 // This script lists the images in the uploads directory.
+// This version now shows each image's file size and uploaded date and time.
+
+// Set the default timezone:
+date_default_timezone_set('America/New_York');
 
 $dir = '../../uploads'; // Define the directory to view.
 
@@ -23,11 +27,17 @@ foreach ($files as $image) {
 		// Get the image's size in pixels:
 		$image_size = getimagesize("$dir/$image");
 
+		// Calculate the image's size in kilobytes:
+		$file_size = round(filesize ("$dir/$image")) / 1024) . "kb";
+
+		// Determine the image's upload date and time:
+		$image_date = date("F d, Y H:i:s", filemtime("$dir/$image"));
+
 		// Make the image's name URL-safe:
 		$image_name = urlencode($image);
 
 		// Print the information:
-		echo "<li><a href=\"javascript: create_window('$image_name', $image_size[0], $image_size[1])\">$image</a></li>\n";
+		echo "<li><a href=\"javascript: create_window('$image_name', $image_size[0], $image_size[1])\">$image</a> $file_size ($image_date)</li>\n";
 
 	} // End of the IF.
 
