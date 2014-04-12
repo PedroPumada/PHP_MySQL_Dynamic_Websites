@@ -28,7 +28,7 @@ foreach ($files as $image) {
 		$image_size = getimagesize("$dir/$image");
 
 		// Calculate the image's size in kilobytes:
-		$file_size = round(filesize ("$dir/$image")) / 1024) . "kb";
+		$file_size = round(filesize ("$dir/$image") / 1024) . "kb";
 
 		// Determine the image's upload date and time:
 		$image_date = date("F d, Y H:i:s", filemtime("$dir/$image"));

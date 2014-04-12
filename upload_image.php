@@ -19,8 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	// Check for an uploaded file:
 	if (isset($_FILES['upload'])) {
 
-		// Validate the type. Should be JPEG or PNG.
-		$allowed = array('image/pjpeg', 'image/jpeg', 'image/JPG', 'image/X-PNG', 'image/PNG', 'image/png', 'image/x-png');
+		// Validate the type. Should be JPEG, PNG, GIF, or PDF.
+
+		$allowed = array('image/pjpeg', 'image/jpeg', 'image/JPG', 'image/X-PNG', 'image/PNG', 'image/png', 'image/x-png', 'image/gif');
 		if (in_array($_FILES['upload']['type'], $allowed)) {
 			// Move the file over.
 			if (move_uploaded_file($_FILES['upload']['tmp_name'], "../../uploads/{$_FILES['upload']['name']}")) {
@@ -28,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			} // end of move...IF
 		
 		} else { // Invalid type
-			echo '<p class="error">Please upload a JPEG or PNG image.</p>';
+			echo '<p class="error">Please upload a JPEG, PNG, or GIF file.</p>';
 		}
 
 	} // End of isset($_FILES['upload']) IF.
@@ -81,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <input type="hidden" name="MAX_FILE_SIZE" value="524288" />
 
-<fieldset><legend>Select a JPEG or PNG image 512KB or smaller to be uploaded:</legend>
+<fieldset><legend>Select a JPEG, PNG, or GIF file 512KB or smaller to be uploaded:</legend>
 
 <p><b>File</b><input type="file" name="upload" /></p>
 
