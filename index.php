@@ -1,4 +1,5 @@
 <?php # Script 3.7 - index.php #2
+session_start();
 
 // This function outputs theoretical HTML
 // for adding ads to a Web page.

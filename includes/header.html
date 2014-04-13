@@ -16,12 +16,14 @@
 			<li><a href="register.php">Register</a></li>
 			<li><a href="view_users.php">View Users</a></li>
 			<li><a href="password.php">Change Password</a></li>
-			<li><?php if ((isset($_COOKIE['user_id'])) && (basename($_SERVER['PHP_SELF']) != 'logout.php')) {
+			<li><?php // Create a login/logout link:
+			if ( (isset($_SESSION['user_id'])) ) {
 				echo '<a href="logout.php">Logout</a>';
 				} else {
-					echo '<a href="login.php>Login</a>';
+					echo '<a href="login.php">Login</a>';
 				}
-				?></li>
+				?>
+			</li>
 		</ul>
 	</div>
 	<div id="content"><!-- Start of the page-specific content. -->

@@ -1,5 +1,6 @@
 <?php # Script 9.7 - password.php
 // This page lets a user change their password.
+session_start();
 
 $page_title = 'Change you Password';
 
