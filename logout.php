@@ -12,10 +12,10 @@ if (!isset($_SESSION['user_id'])) {
 	redirect_user();
 
 } else { // Cancel the session: 
-	
+	$sess = session_name();
 	$_SESSION = array(); // Clear the variables
 	session_destroy(); // Destroy the session itself
-	setcookie('PHPSESSID', '', time()-3600, '/', '', 0, 0); // Destroy the cookie.
+	setcookie($sess, '', time()-3600, '/', '', 0, 0); // Destroy the cookie.
 
 }
 

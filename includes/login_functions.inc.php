@@ -6,7 +6,14 @@
 * The argument defaults to index.php.
 */
 function redirect_user($page='index.php') {
-	
+	/*
+	if ($sub = ' ') { // if no subdirectory was passed
+		$sub = dirname($_SERVER['PHP_SELF']);
+	} else {
+		if (substr($sub, 0) != '/') {
+			$sub .= '/' . $sub;
+		}
+	} */
 	// Start defining the URL....
 	// URL is http:// plus the host name plus the current directory:
 	$url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
