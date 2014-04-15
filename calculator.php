@@ -1,84 +1,45 @@
-<?php # Script 3.10 - calculator.php #5
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Widget Cost Calculator</title>
+</head>
+<body>
+<?php # Script 13.2 - calculator.php
+// This script calculates an order total based upon three form values.
 
-// This function creates a radio button.
-// The function takes two arguments: the value and the name.
-// The function also makes the button "sticky".
-function create_radio($value, $name = 'gallon_price') {
-	
-	// Start the element:
-	echo '<input type="radio" name="' . $name .'" value="' . $value . '"';
-	
-	// Check for stickiness:
-	if (isset($_POST[$name]) && ($_POST[$name] == $value)) {
-		echo ' checked="checked"';
-	} 
-	
-	// Complete the element:
-	echo " /> $value ";
-
-} // End of create_radio() function.
-
-// This function calculates the cost of the trip.
-// The function takes three arguments: the distance, the fuel efficiency, and the price per gallon.
-// The function returns the total cost.
-function calculate_trip_cost($miles, $mpg, $ppg) {
-	
-	// Get the number of gallons:
-	$gallons = $miles/$mpg;
-	
-	// Get the cost of those gallons:
-	$dollars = $gallons/$ppg;
-	
-	// Return the formatted cost:
-	return number_format($dollars, 2);
-	
-} // End of calculate_trip_cost() function.
-
-$page_title = 'Trip Cost Calculator';
-include ('includes/header.html');
-
-// Check for form submission:
+// Check if the form has been submitted:
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-	// Minimal form validation:
-	if (isset($_POST['distance'], $_POST['gallon_price'], $_POST['efficiency']) &&
-	 is_numeric($_POST['distance']) && is_numeric($_POST['gallon_price']) && is_numeric($_POST['efficiency']) ) {
-	
-		// Calculate the results:
-		$cost = calculate_trip_cost($_POST['distance'], $_POST['efficiency'], $_POST['gallon_price']);
-		$hours = $_POST['distance']/65;
-		
-		// Print the results:
-		echo '<h1>Total Estimated Cost</h1>
-	<p>The total cost of driving ' . $_POST['distance'] . ' miles, averaging ' . $_POST['efficiency'] . ' miles per gallon, and paying an average of $' . $_POST['gallon_price'] . ' per gallon, is $' . $cost . '. If you drive at an average of 65 miles per hour, the trip will take approximately ' . number_format($hours, 2) . ' hours.</p>';
-	
+	// Cast all the variables to a specific type:
+	$quantity = (int) $_POST['quantity'];
+	$price = (float) $_POST['price'];
+	$tax = (float) $_POST['tax'];
+
+	// All variables should be positive!
+	if ( ($quantity > 0) && ($price > 0) && ($tax > 0) ) {
+
+		// Calculate the total:
+		$total = $quantity * $price;
+		$total += $total * ($tax/100);
+
+		// Print the result:
+		echo '<p>The total cost of purchasing ' . $quantity . ' widget(s) at $' . number_format($price, 2) . ' each, plus tax, is $' . number_format($total, 2) . '.</p>';
+
 	} else { // Invalid submitted values.
-		echo '<h1>Error!</h1>
-		<p class="error">Please enter a valid distance, price per gallon, and fuel efficiency.</p>';
+		echo '<p style="font-weight: bold; color: #C00">Please enter a valid quantity, price, and tax rate.</p>';
 	}
-	
-} // End of main submission IF.
 
-// Leave the PHP section and create the HTML form:
+} // end of main isset()
+
+// Leave the PHP section and create the HTML form
 ?>
-
-<h1>Trip Cost Calculator</h1>
+<h2>Widget Cost Calculator</h2>
 <form action="calculator.php" method="post">
-	<p>Distance (in miles): <input type="text" name="distance" value="<?php if (isset($_POST['distance'])) echo $_POST['distance']; ?>" /></p>
-	<p>Ave. Price Per Gallon: <span class="input">
-	<?php
-	create_radio('3.00');
-	create_radio('3.50');
-	create_radio('4.00');
-	?>
-	</span></p>
-	<p>Fuel Efficiency: <select name="efficiency">
-		<option value="10"<?php if (isset($_POST['efficiency']) && ($_POST['efficiency'] == '10')) echo ' selected="selected"'; ?>>Terrible</option>
-		<option value="20"<?php if (isset($_POST['efficiency']) && ($_POST['efficiency'] == '20')) echo ' selected="selected"'; ?>>Decent</option>
-		<option value="30"<?php if (isset($_POST['efficiency']) && ($_POST['efficiency'] == '30')) echo ' selected="selected"'; ?>>Very Good</option>
-		<option value="50"<?php if (isset($_POST['efficiency']) && ($_POST['efficiency'] == '50')) echo ' selected="selected"'; ?>>Outstanding</option>
-	</select></p>
-	<p><input type="submit" name="submit" value="Calculate!" /></p>
+<p>Quantity: <input type="text" name="quantity" size="5" maxlength="10" value="<?php if (isset($quantity)) echo $quantity; ?>" /></p>
+<p>Price: <input type="text" name="price" size="5" maxlength="10" value="<?php if (isset($price)) echo $price; ?>" /></p>
+<p>Tax (%): <input type="text" name="tax" size="5" maxlength="10" value="<?php if (isset($tax)) echo $tax; ?>" /></p>
+<p><input type="submit" name="submit" value="Calculate!" /></p>
 </form>
-
-<?php include ('includes/footer.html'); ?>
+</body>
+</html>
