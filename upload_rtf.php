@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			// Indicate it's okay!
 			echo '<p><em>The file would be acceptable!</em></p>';
 
-			// In theory, movethe file over. In reality, delete the file:
+			// In theory, move the file over. In reality, delete the file:
 			unlink($_FILES['upload']['tmp_name']);
 
 		} else { // Invalid type
