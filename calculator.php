@@ -12,10 +12,10 @@
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	// Cast all the variables to a specific type:
-	$quantity = (int) $_POST['quantity'];
-	$price = (float) $_POST['price'];
-	$tax = (float) $_POST['tax'];
-
+	$quantity = (isset($_POST['quantity'])) ? filter_var($_POST['quantity'], FILTER_VALIDATE_INT, array('min_range' => 1)) : NULL;
+	$price = (isset($_POST['price'])) ? filter_var($_POST['price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : NULL;
+	$tax = (isset($_POST['tax'])) ? filter_var($_POST['tax'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : NULL;
+	
 	// All variables should be positive!
 	if ( ($quantity > 0) && ($price > 0) && ($tax > 0) ) {
 
