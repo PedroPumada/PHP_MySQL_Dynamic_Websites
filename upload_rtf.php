@@ -27,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			unlink($_FILES['upload']['tmp_name']);
 
 		} else { // Invalid type
-			echo '<p style="font-weight: bold; color: #C00">Please upload an RTF document.</p>';
+			echo '<p style="font-weight: bold; color: #C00">Please upload an RTF document. You uploaded a file of type: <br/>
+			' . finfo_file($fileinfo, $_FILES['upload']['tmp_name']) . '</p>';
 		}
 
 		// Close the resource:
