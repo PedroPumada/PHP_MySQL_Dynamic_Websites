@@ -6,14 +6,7 @@
 * The argument defaults to index.php.
 */
 function redirect_user($page='index.php') {
-	/*
-	if ($sub = ' ') { // if no subdirectory was passed
-		$sub = dirname($_SERVER['PHP_SELF']);
-	} else {
-		if (substr($sub, 0) != '/') {
-			$sub .= '/' . $sub;
-		}
-	} */
+
 	// Start defining the URL....
 	// URL is http:// plus the host name plus the current directory:
 	$url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
@@ -46,7 +39,11 @@ function check_login($dbc, $email = '', $pass = '') {
 	if (empty($email)) {
 		$errors[] = 'You forgot to enter your email address.';
 	} else {
-		$e = mysqli_real_escape_string($dbc, trim($email));
+		if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			$e = mysqli_real_escape_string($dbc, trim($email));
+		} else {
+			$errors[] = 'You did not enter a valid email address.';
+		}
 	}
 
 	// Validate the password:
