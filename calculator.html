@@ -12,9 +12,9 @@
 <h1>Widget Cost Calculator</h1>
 <p id="results"></p>
 <form action="calculator.php" method="post" id="calculator">
-<p id="quantityP">Quantity: <input type="text" name="quantity" id="quantity" /></p>
-<p id="priceP">Price: <input type="text" name="price" id="price" /></p>
-<p id="taxP">Tax (%): <input type="text" name="tax" id="tax" /></p>
+<p id="quantityP">Quantity: <input type="text" name="quantity" id="quantity" /><span class="errorMessage" id="quantityError">Please enter a valid quantity</span></p>
+<p id="priceP">Price: <input type="text" name="price" id="price" /><span class="errorMessage" id="priceError">Please enter a valid price!</span></p>
+<p id="taxP">Tax (%): <input type="text" name="tax" id="tax" /><span class="errorMessage" id="taxError">Please enter a valid tax!</span></p>
 <p><input type="submit" name="submit" id="submit" value="Calculate!" /></p>
 </form>
 </body>

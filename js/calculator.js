@@ -5,6 +5,9 @@
 // Do something when the document is ready:
 $(function() {
 
+	// Hide all error messages:
+	$('.errorMessage').hide();
+
 	// Assign an event handler to the form:
 	$('#calculator').submit(function() {
 
@@ -17,25 +20,40 @@ $(function() {
 			// Get the quantity:
 			quantity = $('#quantity').val();
 
+			// Clear an error, if one existed:
+			$('#quantityP').removeClass('error');
+
+			// Hide the error message, if it was visible:
+			$('#quantityError').hide();
+
 		} else { // Invalid quantity!
 
-			// Alert the user:
-			alert('Please enter a valid quantity!');
+			// Add an error class:
+			$('#quantityP').addClass('error');
+
+			// Show the error message:
+			$('#quantityError').show();
 
 		}
 
 		// Validate the price:
 		if ($('#price').val() > 0) {
 			price = $('#price').val();
+			$('#priceP').removeClass('error');
+			$('#priceError').hide();
 		} else {
-			alert('Please enter a valid price!');
+			$('#priceP').addClass('error');
+			$('#priceError').show();
 		}
 
 		// Validate the tax:
 		if ($('#tax').val() > 0) {
 			tax = $('#tax').val();
+			$('#taxP').removeClass('error');
+			$('#taxError').hide();
 		} else {
-			alert('Please enter a valid tax!');
+			$('#taxP').addClass('error');
+			$('#taxError').show();
 		}
 
 		// If appropriate, perform the calculations:
@@ -45,12 +63,12 @@ $(function() {
 			total += total * (tax/100);
 
 			// Display the results:
-			alert('The total is $' + total);
+			$('#results').html('The total is <b>$' + total + '</b>.');
 
 		}
 
 		// Return false to prevent an actual form submission:
-		return false;
+		return false; // Prevents submission to the actual PHP page
 
 	}); // End of form submission
 
