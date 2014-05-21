@@ -5,10 +5,10 @@
 	<title>Login</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
 	<script type="text/javascript" src="js/jquery-2.1.0.min.js" charset="utf-8"> </script>
-	<script type="text/javascript" src="js/login.js" charset="utf-8"> </script>
+	<script type="text/javascript" src="js/login2.js" charset="utf-8"> </script>
 </head>
 <body>
-<!-- Script 15.8 - login.php -->
+<!-- Script 15.8 - login2.php -->
 <h1>Login</h1>
 <p id="results"></p>
 <form action="login2.php" method="post" id="login">
