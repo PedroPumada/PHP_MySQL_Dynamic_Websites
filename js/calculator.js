@@ -11,6 +11,8 @@ $(function() {
 	// Assign an event handler to the form:
 	$('#calculator').submit(function() {
 
+		$('#results').html('');
+
 		// Initialize some variables:
 		var quantity, price, tax, total;
 
