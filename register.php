@@ -8,7 +8,7 @@ include ('includes/header.html');
 // Check for form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-	require('../../mysqli_connect.php'); // Connect to the db, moved earlier for mysqli_real_escape_string()
+	require('../../mysqli_oop_connect.php'); // Connect to the db, OOP style
 
 	$errors = array(); // Initialize an error array.
 
@@ -16,21 +16,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (empty($_POST['first_name'])) {
 		$errors[] = 'You forgot to enter your first name.';
 	} else {
-		$fn = mysqli_real_escape_string($dbc, trim($_POST['first_name']));
+		$fn = $mysqli->real_escape_string(trim($_POST['first_name']));
 	}
 
 	// Check for a last name:
 	if (empty($_POST['last_name'])) {
 		$errors[] = 'You forgot to enter your last name.';
 	} else {
-		$ln = mysqli_real_escape_string($dbc, trim($_POST['last_name']));
+		$ln = $mysqli->real_escape_string(trim($_POST['last_name']));
 	}
 
 	// Check for an e-mail address:
 	if (empty($_POST['email'])) {
 		$errors[] =  'You forgot to enter your e-mail address.';
 	} else {
-		$e = mysqli_real_escape_string($dbc, trim($_POST['email']));
+		$e = $mysqli->real_escape_string(trim($_POST['email']));
 	}
 
 	// Check for a password and match against a confirmed password:
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if ($_POST['pass1'] != $_POST['pass2']) {
 			$errors[] = 'Your password did not match the confirmed password.';
 		} else {
-			$p = mysqli_real_escape_string($dbc, trim($_POST['pass1']));
+			$p = $mysqli->real_escape_string(trim($_POST['pass1']));
 		}
 	} else {
 		$errors[] = 'You forgot to enter your password.';
@@ -49,14 +49,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		// Make the query:
 		$check_q = "SELECT user_id FROM users WHERE email='$e'";
-		$check_r = mysqli_query($dbc, $check_q);
+		$mysqli->query($check_q);
 
-		if (mysqli_num_rows($check_r) == 0) { // There is no existing e-mail, proceed!
+		if ($mysqli->affected_rows == 0) { // There is no existing e-mail, proceed!
+			// Make the query:
 			$q = "INSERT INTO users (first_name, last_name, email, pass, registration_date)
 			VALUES ('$fn', '$ln', '$e', SHA1('$p'), NOW() )";
-			$r = @mysqli_query($dbc, $q); // Run the query
 
-			if (mysqli_affected_rows($dbc) == 1) { // If one record was successfully inserted
+			// Execute the query:
+			$mysqli->query($q); // Run the query
+
+			if ($mysqli->affected_rows == 1) { // If one record was successfully inserted
 				// Print a message:
 				echo '<h1>Thank you!</h1>
 				<p>You are now registered. In Chapter 12 you will actually be able to log in!</p><p>
@@ -69,15 +72,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				<p class="error">You could not be registered due to a system error. We apologize for any inconvenience.</p>';
 
 				// Debugging message:
-				echo '<p>' . mysqli_connect_error($dbc) . '<br /><br />Query: ' . $q . '</p>';
+				echo '<p>' . $mysqli->error . '<br /><br />Query: ' . $q . '</p>';
 			} // End of if($r) IF.
 		} else {
 			echo '<p class="error">That e-mail is already registered, sorry!<p>';
 		}
 
 
-		mysqli_close($dbc); // Close the DB connection
-
+		$mysqli->close(); // Close the DB connection
+		unset($mysqli);
 		// Include the footer and quit the script:
 		include('includes/footer.html');
 		exit();
@@ -90,7 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
 		echo '</p><p>Please try again. <br /></p>';
 	} // End of IF empty($errors)) IF.
-mysqli_close($dbc); // Close the database connection
+$mysqli->close(); // Close the database connection
+unset($mysqli);
 
 } // End of the main Submit conditional
 ?>
