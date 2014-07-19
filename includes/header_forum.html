@@ -1,0 +1,68 @@
+<?php # Script 17.1 - header.html 
+/* This script... 
+ * - starts the HTML template
+ * - indicates the encoding using header().
+ * - starts the session
+ * - gets the language-specific words from the database
+ * - lists the available languages
+*/
+
+// Indicate the encoding:
+header ('Content-Type: text/html; charset=UTF-8');
+
+// Start the session:
+session_start();
+
+// For testing purposes:
+$_SESSION['user_id'] = 1;
+$_SESSION['user_tz'] = 'America/New_York';
+// For logging out:
+// $_SESSION = array();
+
+// Need the database connection:
+require('../../mysqli_forum_connect.php');
+
+// Check for a new language ID...
+// Then store the language ID in the session:
+if ( isset($GET['lid']) && 
+	 filter_var($_GET['lid'], FILTER_VALIDATE_INT, array('min_range' => 1)) 
+	) {
+	$_SESSION['lid'] = $_GET['lid'];
+} elseif (!isset($_SESSION['lid'])) {
+		$_SESSION['lid'] = 1; // Default.
+}
+
+// Get the words for this language:
+$q = "SELECT * FROM words WHERE lang_id = {$_SESSION['lid']}";
+if ($r = $mysqli->query($q)) {
+	if ($r->num_rows == 0) { // Invalid language ID
+		// Use the default language:
+		$_SESSION['lid'] = 1; // Default
+		$q = "SELECT * FROM words WHERE lang_id = {$_SESSION['lid']}";
+		$r = $mysqli->query($q);
+	
+	}
+
+	// Fetch the results into a variable:
+	$words = $r->fetch_array(MYSQLI_ASSOC);
+
+	// Free the results:
+	$r->free();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title><?php echo $words['title']; ?></title>
+	<link rel="stylesheet" href="includes/forum.css" type="text/css" media="screen" />
+</head>
+<body>
+	
+	<table width="90%" border="0" cellspacing="10" cellpadding="0" align="center">
+	<tr>
+		<td colspan="2" bgcolor="#003366" align="center"><p class="title"><?php echo $words['title']; ?></p></td>
+	</tr>
+	</tr>
+</body>
+</html>
