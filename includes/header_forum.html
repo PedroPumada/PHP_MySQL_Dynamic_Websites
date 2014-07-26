@@ -63,6 +63,52 @@ if ($r = $mysqli->query($q)) {
 	<tr>
 		<td colspan="2" bgcolor="#003366" align="center"><p class="title"><?php echo $words['title']; ?></p></td>
 	</tr>
-	</tr>
-</body>
-</html>
+
+	<tr>
+		<td valign="top" nowrap="nowrap" width="10%"><b>
+		<?php // Display links:
+		// Default links:
+		echo '<a href="index.php" class="navlink">' . $words['home'] . '</a><br /> 
+		<a href="forum.php" class="navlink">' . $words['forum_home'] . '</a><br />';
+
+		// Display links based upon login status:
+		if (isset($_SESSION['user_id'])) {
+
+			// If this is the forum page, add a link for posting new threads:
+			if (basename($_SERVER['PHP_SELF']) == 'forum.php') {
+				echo '<a href="post.php" class="navlink">' . $words['new_thread'] . '</a><br />';
+			}
+
+			// Add the logout link:
+			echo '<a href="logout.php" class="navlink">' . $words['logout'] . '</a><br />';
+
+		} else {
+
+			// Register and login links:
+			echo '<a href="register.php" class="navlink">' . $words['register'] . '</a><br />
+			<a href="login.php" class="navlink">' . $words['login'] . '</a><br />';
+
+		}
+
+		// For choosing a forum/language:
+		echo '</b><p><form action="forum.php" method="get">
+		<select name="lid">
+		<option value="0">' . $words['language'] . '</option>';
+
+		// Retrieve all the languages:
+		$q = "SELECT lang_id, lang FROM languages ORDER BY lang_eng ASC";
+		$r = $mysqli->query($q);
+		if ($r->num_rows > 0) {
+			while ( $menu_row = $r->fetch_array(MYSQLI_NUM) ) {
+				echo "<option value=\"$menu_row[0]\">$menu_row[1]</option>\n";
+			}
+		}
+
+		$r->free();
+
+		echo '</select><br />
+		<input name="submit" type="submit" value="' . $words['submit'] . '" />
+		</form></p>
+		</td>
+		<td valign="top" class="content">';
+		?>
