@@ -35,11 +35,7 @@ if ( isset($_GET['lid']) ) {
 
 // Get the words for this language:
 $q = "SELECT * FROM words WHERE lang_id = '{$_SESSION['lid']}'";
-echo "Query:";
-print_r($q);
 $r = $mysqli->query($q);
-echo "Result:";
-print_r($r);
 if ($r) {
 	if ($r->num_rows < 1) { // Invalid language ID
 		// Use the default language:
