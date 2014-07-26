@@ -22,7 +22,7 @@ $q = "SELECT t.thread_id, t.subject, username, COUNT(post_id) - 1 AS responses, 
 	WHERE t.lang_id = {$_SESSION['lid']} GROUP BY (p.thread_id) ORDER BY last DESC";
 $r = $mysqli->query($q);
 if ($r->num_rows > 0) {
-	// Create a table:
+	// Create a table for the results:
 	echo '<table width="100%" border="0" cellspacing="2" cellpadding="2" align="center">
 	<tr>
 	<td align="left" width="50%"><em>' . $words['subject'] . '</em>:</td>
@@ -50,6 +50,8 @@ if ($r->num_rows > 0) {
 } else {
 	echo '<p>There are currently no messages in this forum.</p>';
 }
+
+$r->free();
 
 // Include the HTML footer file:
 include('includes/footer.html');

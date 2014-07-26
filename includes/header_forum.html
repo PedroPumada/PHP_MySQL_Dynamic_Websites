@@ -11,7 +11,10 @@
 header ('Content-Type: text/html; charset=UTF-8');
 
 // Start the session:
-session_start();
+if (!session_start()) {
+	echo "Session failed!";
+	exit();
+};
 
 // For testing purposes:
 $_SESSION['user_id'] = 1;
@@ -24,18 +27,21 @@ require('../../mysqli_forum_connect.php');
 
 // Check for a new language ID...
 // Then store the language ID in the session:
-if ( isset($GET['lid']) && 
-	 filter_var($_GET['lid'], FILTER_VALIDATE_INT, array('min_range' => 1)) 
-	) {
+if ( isset($_GET['lid']) ) {
 	$_SESSION['lid'] = $_GET['lid'];
 } elseif (!isset($_SESSION['lid'])) {
 		$_SESSION['lid'] = 1; // Default.
 }
 
 // Get the words for this language:
-$q = "SELECT * FROM words WHERE lang_id = {$_SESSION['lid']}";
-if ($r = $mysqli->query($q)) {
-	if ($r->num_rows == 0) { // Invalid language ID
+$q = "SELECT * FROM words WHERE lang_id = '{$_SESSION['lid']}'";
+echo "Query:";
+print_r($q);
+$r = $mysqli->query($q);
+echo "Result:";
+print_r($r);
+if ($r) {
+	if ($r->num_rows < 1) { // Invalid language ID
 		// Use the default language:
 		$_SESSION['lid'] = 1; // Default
 		$q = "SELECT * FROM words WHERE lang_id = {$_SESSION['lid']}";
@@ -45,6 +51,8 @@ if ($r = $mysqli->query($q)) {
 
 	// Fetch the results into a variable:
 	$words = $r->fetch_array(MYSQLI_ASSOC);
+
+	print_r($words);
 
 	// Free the results:
 	$r->free();
@@ -68,7 +76,7 @@ if ($r = $mysqli->query($q)) {
 		<td valign="top" nowrap="nowrap" width="10%"><b>
 		<?php // Display links:
 		// Default links:
-		echo '<a href="index.php" class="navlink">' . $words['home'] . '</a><br /> 
+		echo '<a href="forum_index.php" class="navlink">' . $words['home'] . '</a><br /> 
 		<a href="forum.php" class="navlink">' . $words['forum_home'] . '</a><br />';
 
 		// Display links based upon login status:
