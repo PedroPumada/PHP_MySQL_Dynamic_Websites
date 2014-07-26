@@ -54,5 +54,5 @@ if ($r->num_rows > 0) {
 $r->free();
 
 // Include the HTML footer file:
-include('includes/footer.html');
+include('includes/footer_forum.html');
 ?>
