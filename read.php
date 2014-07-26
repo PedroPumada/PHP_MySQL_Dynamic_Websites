@@ -17,8 +17,8 @@ if ( isset($_GET['tid']) && filter_var($_GET['tid'], FILTER_VALIDATE_INT, array(
 	}
 
 	// Run the query:
-	$q = "SELECT t.subject, p.message, username, DATE_FORMAT($posted, '%e-%b-%y %l:%i %p') AS posted 
-	FROM threads AS t LEFT JOIN posts AS p USING (thread_id) INNER JOIN user AS u ON p.user_id = u.user_id
+	$q = "SELECT t.subject, p.message, username, DATE_FORMAT(p.posted_on, '%e-%b-%y %l:%i %p') AS posted 
+	FROM threads AS t LEFT JOIN posts AS p USING (thread_id) INNER JOIN users AS u ON p.user_id = u.user_id 
 	WHERE t.thread_id = $tid ORDER BY p.posted_on ASC";
 	$r = $mysqli->query($q);
 	if (!($r->num_rows > 0)) {
@@ -42,7 +42,7 @@ if ($tid) { // Get the messages in this thread...
 		// Print the message:
 		echo "<p>{$messages['username']}
 		({$messages['posted']})<br />
-		{$messages['messages']}</p><br />\n";
+		{$messages['message']}</p><br />\n";
 
 	} // end of WHILE loop
 
